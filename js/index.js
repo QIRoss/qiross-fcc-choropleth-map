@@ -1,27 +1,27 @@
-var body = d3.select("body");
+const body = d3.select("body");
 
-var svg = d3.select("svg"),
-  width = +svg.attr("width"),
-  height = +svg.attr("height");
+const svg = d3.select("svg"),
+  width = svg.attr("width"),
+  height = svg.attr("height");
 
-var tooltip = body.append("div")
+const tooltip = body.append("div")
   .attr("class", "tooltip")
   .attr("id", "tooltip")
   .style("opacity", 0);
 
-var unemployment = d3.map();
+const unemployment = d3.map();
 
-var path = d3.geoPath();
+const path = d3.geoPath();
 
-var x = d3.scaleLinear()
+const x = d3.scaleLinear()
   .domain([2.6, 75.1])
   .rangeRound([600, 860]);
 
-var color = d3.scaleThreshold()
+const color = d3.scaleThreshold()
   .domain(d3.range(2.6, 75.1, (75.1 - 2.6) / 8))
   .range(d3.schemeGreens[9]);
 
-var g = svg.append("g")
+const g = svg.append("g")
   .attr("class", "key")
   .attr("id", "legend")
   .attr("transform", "translate(0,40)");
@@ -75,47 +75,43 @@ function ready(error, us, education) {
       return d.id
     })
     .attr("data-education", function (d) {
-      var result = education.filter(function (obj) {
+      const result = education.filter(function (obj) {
         return obj.fips == d.id;
       });
       if (result[0]) {
         return result[0].bachelorsOrHigher
       }
-      //could not find a matching fips id in the data
       console.log('could find data for: ', d.id);
       return 0
     })
     .attr("fill", function (d) {
-      var result = education.filter(function (obj) {
+      const result = education.filter(function (obj) {
         return obj.fips == d.id;
       });
       if (result[0]) {
         return color(result[0].bachelorsOrHigher)
       }
-      //could not find a matching fips id in the data
       return color(0)
     })
     .attr("d", path)
     .on("mouseover", function (d) {
       tooltip.style("opacity", .9);
       tooltip.html(function () {
-        var result = education.filter(function (obj) {
+        const result = education.filter(function (obj) {
           return obj.fips == d.id;
         });
         if (result[0]) {
           return result[0]['area_name'] + ', ' + result[0]['state'] + ': ' + result[0].bachelorsOrHigher + '%'
         }
-        //could not find a matching fips id in the data
         return 0
       })
         .attr("data-education", function () {
-          var result = education.filter(function (obj) {
+          const result = education.filter(function (obj) {
             return obj.fips == d.id;
           });
           if (result[0]) {
             return result[0].bachelorsOrHigher
           }
-          //could not find a matching fips id in the data
           return 0
         })
         .style("left", (d3.event.pageX + 10) + "px")
